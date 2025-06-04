@@ -1,6 +1,7 @@
 package com.br.lucasfncode.construction_phase_manager.domain.service;
 
 import com.br.lucasfncode.construction_phase_manager.application.model.input.ObraInputDTO;
+import com.br.lucasfncode.construction_phase_manager.application.model.output.ObraOutputDTO;
 import com.br.lucasfncode.construction_phase_manager.domain.entity.Obra;
 import com.br.lucasfncode.construction_phase_manager.domain.repository.ObraRepository;
 import lombok.AllArgsConstructor;
@@ -14,35 +15,34 @@ import java.util.UUID;
 public class ObraService {
 
     private final ObraRepository obraRepository;
+    private final ConversorService conversorService;
 
-    public Obra criarObra(ObraInputDTO obraInputDTO) {
-        return obraRepository.save(conversorObraInputDTOParaObra(obraInputDTO));
+    public ObraOutputDTO criarObra(ObraInputDTO obraInputDTO) {
+        Obra obra = conversorService.obraInputDTOParaObra(obraInputDTO);
+        return conversorService.obraParaObraOutputDTO(obraRepository.save(obra));
     }
 
-    public Obra atualizarObra(UUID id, ObraInputDTO obraInputDTO) {
-        Obra obra = conversorObraInputDTOParaObra(obraInputDTO);
+    public ObraOutputDTO atualizarObra(UUID id, ObraInputDTO obraInputDTO) {
+        Obra obra = conversorService.obraInputDTOParaObra(obraInputDTO);
         obra.setId(id);
-        return obraRepository.save(obra);
+        return conversorService.obraParaObraOutputDTO(obraRepository.save(obra));
     }
 
-    public Obra buscarObraPorId(UUID id) {
+    public ObraOutputDTO buscarObraPorId(UUID id) {
+        return conversorService.obraParaObraOutputDTO(obraRepository.findById(id).orElseThrow());
+    }
+
+    protected Obra buscarObraEntityPorId(UUID id) {
         return obraRepository.findById(id).orElseThrow();
     }
 
-    public List<Obra> buscarTodasObras() {
-        return obraRepository.findAll();
+    public List<ObraOutputDTO> buscarTodasObras() {
+        return obraRepository.findAll().stream().map(conversorService::obraParaObraOutputDTO).toList();
     }
 
     public void excluirObra(UUID id) {
         obraRepository.deleteById(id);
     }
 
-    private Obra conversorObraInputDTOParaObra(ObraInputDTO obraInputDTO) {
-        return new Obra(
-                obraInputDTO.nome(),
-                obraInputDTO.descricao(),
-                obraInputDTO.dataInicio(),
-                obraInputDTO.dataPrevisaoFim()
-        );
-    }
+
 }
