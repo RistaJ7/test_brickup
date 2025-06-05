@@ -1,5 +1,9 @@
-const formatarData = (data) => {
+const formatarDataExibicao = (data) => {
     return new Intl.DateTimeFormat("pt-BR").format(new Date(data));
 };
 
-export default formatarData;
+const formatarDataEnvioBackend = (data) => {
+    return new Intl.DateTimeFormat("en-CA").format(new Date(data));
+};
+
+export { formatarDataExibicao ,  formatarDataEnvioBackend};

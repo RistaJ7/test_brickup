@@ -29,8 +29,8 @@ const App = () => {
                 >
                     <Routes>
                         <Route path="/" element={<ListObra />} />
-                        <Route path="/details" element={<DetailsObra />} />
-                        <Route path="/forms" element={<FormCreateObra />} />
+                        <Route path="/obraDetails/:id" element={<DetailsObra />} />
+                        <Route path="/createObra" element={<FormCreateObra />} />
                     </Routes>
                 </Content>
             </Layout>
