@@ -33,6 +33,11 @@ public class ObraController {
         return ResponseEntity.status(HttpStatus.OK).body(obraService.buscarObraPorId(idObra));
     }
 
+    @GetMapping("/obrasEtapasConcluidas/{idObra}")
+    public ResponseEntity<Long> buscarEtapasConcluidas(@PathVariable UUID idObra) {
+        return ResponseEntity.status(HttpStatus.OK).body(obraService.buscarEtapasConcluidasObra(idObra));
+    }
+
     @GetMapping
     public ResponseEntity<List<ObraOutputDTO>> listarObras() {
         return ResponseEntity.ok(obraService.buscarTodasObras());

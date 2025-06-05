@@ -3,7 +3,9 @@ package com.br.lucasfncode.construction_phase_manager.domain.service;
 import com.br.lucasfncode.construction_phase_manager.application.model.input.ObraInputDTO;
 import com.br.lucasfncode.construction_phase_manager.application.model.output.ObraOutputDTO;
 import com.br.lucasfncode.construction_phase_manager.domain.entity.Obra;
+import com.br.lucasfncode.construction_phase_manager.domain.entity.etapa.StatusEtapa;
 import com.br.lucasfncode.construction_phase_manager.domain.repository.ObraRepository;
+import com.sun.jdi.LongValue;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +40,11 @@ public class ObraService {
 
     public List<ObraOutputDTO> buscarTodasObras() {
         return obraRepository.findAll().stream().map(conversorService::obraParaObraOutputDTO).toList();
+    }
+
+    public Long buscarEtapasConcluidasObra(UUID id) {
+        return this.buscarObraEntityPorId(id).getEtapas().stream().filter(etapa -> etapa.getStatus()
+                .equals(StatusEtapa.CONCLUIDA)).count();
     }
 
     public void excluirObra(UUID id) {
