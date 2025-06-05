@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import { Layout, theme } from "antd";
+import GlobalHeader from "./components/Header";
+import GlobalSider from "./components/Sider/Sider";
+import { Route, Routes } from "react-router-dom";
+import ListObra from "./pages/ListObra"
+import DetailsObra from "./pages/DetailsObra"
+import FormCreateObra from "./pages/FormCreateObra"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const { Content } = Layout;
+
+const App = () => {
+    const {
+        token: { colorBgContainer, borderRadiusLG },
+    } = theme.useToken();
+
+    return (
+        <Layout>
+            <GlobalSider />
+            <Layout>
+                <GlobalHeader />
+                <Content
+                    style={{
+                        margin: "24px 16px",
+                        padding: 24,
+                        minHeight: 280,
+                        background: colorBgContainer,
+                        borderRadius: borderRadiusLG,
+                    }}
+                >
+                    <Routes>
+                        <Route path="/" element={<ListObra />} />
+                        <Route path="/details" element={<DetailsObra />} />
+                        <Route path="/forms" element={<FormCreateObra />} />
+                    </Routes>
+                </Content>
+            </Layout>
+        </Layout>
+    );
+};
 
 export default App;
