@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchObras } from "../store/ObraSlice";
-import { List, Card, Spin, Alert } from "antd";
+import { List, Card, Spin, Alert, Button, Steps } from "antd";
 
 const ListObra = () => {
     const dispatch = useDispatch();
@@ -24,18 +24,42 @@ const ListObra = () => {
                 <List
                     grid={{ gutter: 16, column: 2 }}
                     dataSource={obras}
-                    renderItem={(obra) => (
-                        <List.Item>
-                            <Card title={obra.nome}>
-                                <p><strong>Autor:</strong> {obra.nome}</p>
-                                <p><strong>Descrição:</strong> {obra.descricao}</p>
-                                <p><strong>Data início:</strong> {obra.dataInicio}</p>
-                                <p><strong>Data previsão fim:</strong> {obra.dataPrevisaoFim}</p>
-                            </Card>
-                        </List.Item>
-                    )}
+                    renderItem={(obra) => {
+                        const etapas = obra.etapas || [];
+                        const currentEtapaIndex = etapas.findIndex(etapa => etapa.status === "em andamento");
+
+                        return (
+                            <List.Item>
+                                <Card title={obra.nome}>
+                                    <p><strong>Autor:</strong> {obra.nome}</p>
+                                    <p><strong>Descrição:</strong> {obra.descricao}</p>
+                                    <p><strong>Data início:</strong> {obra.dataInicio}</p>
+                                    <p><strong>Data previsão fim:</strong> {obra.dataPrevisaoFim}</p>
+
+                                    {etapas.length > 0 && (
+                                        <Steps
+                                            style={{ marginTop: 8 }}
+                                            type="inline"
+                                            current={currentEtapaIndex !== -1 ? currentEtapaIndex : 0}
+                                            items={etapas.map(etapa => ({
+                                                title: etapa.nome,
+                                                description: etapa.descricao,
+                                                status: etapa.status === "EM_ANDAMENTO" ? "process" : etapa.status === "CONCLUIDA" ? "finish" : "wait"
+                                            }))}
+                                        />
+                                    )}
+                                </Card>
+                            </List.Item>
+                        );
+                    }}
                 />
             )}
+            <Button
+                type="primary"
+                size="large"
+            >
+                Criar Obra
+            </Button>
         </div>
     );
 };

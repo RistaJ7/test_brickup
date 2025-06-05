@@ -1,9 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getObras } from "../services/ObraService";
+import { getObras, getEtapasDaObra } from "../services/ObraService";
 
+// Buscar todas as obras e suas etapas
 export const fetchObras = createAsyncThunk("obra/fetchObras", async () => {
-    const response = await getObras();
-    return response;
+    const obras = await getObras();
+    const etapasPromises = obras.map(obra => getEtapasDaObra(obra.id));
+    const etapas = await Promise.all(etapasPromises); // Espera todas as requisições terminarem
+
+    // Mapeia as etapas para cada obra
+    const obrasComEtapas = obras.map((obra, index) => ({
+        ...obra,
+        etapas: etapas[index],
+    }));
+
+    return obrasComEtapas;
 });
 
 const obraSlice = createSlice({
@@ -21,7 +31,7 @@ const obraSlice = createSlice({
             })
             .addCase(fetchObras.fulfilled, (state, action) => {
                 state.status = "succeeded";
-                state.obras = action.payload;
+                state.obras = action.payload; // Agora as obras já têm suas etapas
             })
             .addCase(fetchObras.rejected, (state, action) => {
                 state.status = "failed";
