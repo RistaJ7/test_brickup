@@ -2,6 +2,7 @@ package com.br.lucasfncode.construction_phase_manager.domain.service;
 
 import com.br.lucasfncode.construction_phase_manager.application.model.input.etapa.EtapaInputDTO;
 import com.br.lucasfncode.construction_phase_manager.application.model.output.EtapaOutputDTO;
+import com.br.lucasfncode.construction_phase_manager.application.model.output.ObraOutputDTO;
 import com.br.lucasfncode.construction_phase_manager.domain.entity.Obra;
 import com.br.lucasfncode.construction_phase_manager.domain.entity.etapa.Etapa;
 import com.br.lucasfncode.construction_phase_manager.domain.repository.EtapaRepository;
@@ -40,6 +41,13 @@ public class EtapaService {
     public List<EtapaOutputDTO> buscarTodasEtapas() {
         return etapaRepository.findAll().stream().map(etapa -> this.conversorService
                 .etapaParaEtapaOutpuDTO(etapa, etapa.getObra())).toList();
+    }
+
+    public List<EtapaOutputDTO> buscarEtapasDeUmaObra(UUID idObra) {
+        Obra obra = obraService.buscarObraEntityPorId(idObra);
+        List<Etapa> listEtapa = etapaRepository.findByObra(obra);
+        return listEtapa.stream().map(etapa -> this.conversorService
+                .etapaParaEtapaOutpuDTO(etapa, obra)).toList();
     }
 
     public void excluirEtapa(UUID idEtapa) {

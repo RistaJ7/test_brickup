@@ -1,7 +1,9 @@
 package com.br.lucasfncode.construction_phase_manager.application.controller;
 
 import com.br.lucasfncode.construction_phase_manager.application.model.input.ObraInputDTO;
+import com.br.lucasfncode.construction_phase_manager.application.model.output.EtapaOutputDTO;
 import com.br.lucasfncode.construction_phase_manager.application.model.output.ObraOutputDTO;
+import com.br.lucasfncode.construction_phase_manager.domain.service.EtapaService;
 import com.br.lucasfncode.construction_phase_manager.domain.service.ObraService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import java.util.UUID;
 public class ObraController {
 
     private final ObraService obraService;
+    private final EtapaService etapaService;
 
     @PostMapping
     public ResponseEntity<ObraOutputDTO> criar(@RequestBody ObraInputDTO obraInputDTO) {
@@ -41,6 +44,11 @@ public class ObraController {
     @GetMapping
     public ResponseEntity<List<ObraOutputDTO>> listarObras() {
         return ResponseEntity.ok(obraService.buscarTodasObras());
+    }
+
+    @GetMapping("/{idObra}/etapas")
+    public ResponseEntity<List<EtapaOutputDTO>> listarEtapasPorObra(@PathVariable UUID idObra) {
+        return ResponseEntity.ok(etapaService.buscarEtapasDeUmaObra(idObra));
     }
 
     @DeleteMapping("/{idObra}")
