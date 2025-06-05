@@ -1,3 +1,4 @@
+### Rules backend ###
 backend/HELP.md
 backend/target/
 backend/.mvn/wrapper/maven-wrapper.jar
@@ -10,3 +11,6 @@ backend/*.iws
 backend/*.iml
 backend/*.ipr
 
+### Rules frontend ###
+frontend/node_modules
+frontend/README.md
