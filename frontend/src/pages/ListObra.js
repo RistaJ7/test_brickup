@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchObras } from "../store/ObraSlice";
 import { List, Card, Spin, Alert, Button, Steps } from "antd";
+import formartarData from "../services/FormatDateService";
 
 const ListObra = () => {
     const dispatch = useDispatch();
@@ -33,8 +34,8 @@ const ListObra = () => {
                                 <Card title={obra.nome}>
                                     <p><strong>Autor:</strong> {obra.nome}</p>
                                     <p><strong>Descrição:</strong> {obra.descricao}</p>
-                                    <p><strong>Data início:</strong> {obra.dataInicio}</p>
-                                    <p><strong>Data previsão fim:</strong> {obra.dataPrevisaoFim}</p>
+                                    <p><strong>Data início:</strong> {formartarData(obra.dataInicio)}</p>
+                                    <p><strong>Data previsão fim:</strong> {formartarData(obra.dataPrevisaoFim)}</p>
 
                                     {etapas.length > 0 && (
                                         <Steps
