@@ -4,7 +4,7 @@ Aplicação web para gerenciar as etapas de uma obra.
 🚀 **Como executar o projeto:**
 
 ### Clonar o repositório
-`git clone https://`
+```git clone https://github.com/RudeBoyOne/test_brickup.git```
 
 ### Executar uma instância do MySQL
 ##### sugestão docker
@@ -21,6 +21,7 @@ docker run --name construction-mysql \
 > com a senha **"construction"** e a criação do database: **"construction_phase_manager"**
 
 ### Executar o backend
+##### Necessário ter o Java instalado na máquina versão 21 ou superior
 ##### Se estiver no linux
 ```shell
 cd backend \
