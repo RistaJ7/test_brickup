@@ -4,10 +4,8 @@ import com.br.lucasfncode.construction_phase_manager.application.model.input.Obr
 import com.br.lucasfncode.construction_phase_manager.application.model.output.EtapaOutputDTO;
 import com.br.lucasfncode.construction_phase_manager.application.model.output.ObraOutputDTO;
 import com.br.lucasfncode.construction_phase_manager.domain.entity.Obra;
-import com.br.lucasfncode.construction_phase_manager.domain.entity.etapa.Etapa;
 import com.br.lucasfncode.construction_phase_manager.domain.entity.etapa.StatusEtapa;
 import com.br.lucasfncode.construction_phase_manager.domain.repository.ObraRepository;
-import com.sun.jdi.LongValue;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -50,8 +48,12 @@ public class ObraService {
     }
 
     public Long buscarEtapasConcluidasObra(UUID id) {
-        return this.buscarObraEntityPorId(id).getEtapas().stream().filter(etapa -> etapa.getStatus()
-                .equals(StatusEtapa.CONCLUIDA)).count();
+        Integer totalEtapas = this.buscarEtapasDeUmaObra(id).size();
+        Long etapasConcluidas = this.buscarObraEntityPorId(id).getEtapas().stream()
+                .filter(etapa -> etapa.getStatus()
+                        .equals(StatusEtapa.CONCLUIDA)).count();
+
+        return (etapasConcluidas * 100) / totalEtapas;
     }
 
     public void excluirObra(UUID id) {

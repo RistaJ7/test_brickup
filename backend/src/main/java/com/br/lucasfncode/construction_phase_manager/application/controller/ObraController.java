@@ -3,7 +3,6 @@ package com.br.lucasfncode.construction_phase_manager.application.controller;
 import com.br.lucasfncode.construction_phase_manager.application.model.input.ObraInputDTO;
 import com.br.lucasfncode.construction_phase_manager.application.model.output.EtapaOutputDTO;
 import com.br.lucasfncode.construction_phase_manager.application.model.output.ObraOutputDTO;
-import com.br.lucasfncode.construction_phase_manager.domain.service.EtapaService;
 import com.br.lucasfncode.construction_phase_manager.domain.service.ObraService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
