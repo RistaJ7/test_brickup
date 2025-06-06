@@ -69,3 +69,13 @@ export const atualizarObra = async (id, obra) => {
         throw error;
     }
 };
+
+export const deletarObraPorId = async (id) => {
+    try {
+        const response = await api.delete(`${URI}/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao buscar obra:", error);
+        throw error;
+    }
+};

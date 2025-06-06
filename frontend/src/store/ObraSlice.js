@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { atualizarObra, buscarEtapasDaObra, buscarObraPorId, buscarQuantEtapasConluidasObra, buscarTodasObras } from "../services/ObraService";
+import { atualizarObra, buscarEtapasDaObra, buscarObraPorId, buscarQuantEtapasConluidasObra, buscarTodasObras, deletarObraPorId } from "../services/ObraService";
 
 export const buscarTodasObrasThunk = createAsyncThunk("obra/buscarTodasObrasThunk", async () => {
     const obras = await buscarTodasObras();
@@ -46,6 +46,18 @@ export const atualizarObraThunk = createAsyncThunk(
             return data;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || "Erro ao atualizar obra.");
+        }
+    }
+);
+
+export const deletarObraThunk = createAsyncThunk(
+    "obra/deletarObra",
+    async (id, { rejectWithValue }) => {
+        try {
+            await deletarObraPorId(id);
+            return id;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || "Erro ao deletar obra.");
         }
     }
 );
@@ -119,6 +131,17 @@ const obraSlice = createSlice({
                 }
             })
             .addCase(atualizarObraThunk.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.payload;
+            })
+            .addCase(deletarObraThunk.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(deletarObraThunk.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.obras = state.obras.filter(obra => obra.id !== action.payload);
+            })
+            .addCase(deletarObraThunk.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.payload;
             });

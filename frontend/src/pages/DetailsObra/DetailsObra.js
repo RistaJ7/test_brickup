@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Spin, Alert, Row, Col, Table, Typography, Progress, Button, Popconfirm, message } from "antd";
+import { Spin, Alert, Row, Col, Table, Typography, Progress, Button, Popconfirm, message, Space } from "antd";
 import { formatarDataExibicao } from "../../services/FormatDateService";
-import { buscarObraPorIdThunk, buscarQuantEtapasConcluidasObraThunk } from "../../store/ObraSlice";
+import { buscarObraPorIdThunk, buscarQuantEtapasConcluidasObraThunk, deletarObraThunk, atualizarObraThunk } from "../../store/ObraSlice";
 import AddEtapaEmObra from "./components/AddEtapaEmObra";
 import BotaoVoltar from "../components/BackButton";
 import { ReloadOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
@@ -15,6 +15,7 @@ const { Title, Paragraph } = Typography;
 const ObraDetails = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const {
         obraSelecionada,
         statusObra,
@@ -50,11 +51,32 @@ const ObraDetails = () => {
     const handleOpenUpdateObraModal = () => setModalUpdateObraVisible(true);
     const handleCloseUpdateObraModal = () => setModalUpdateObraVisible(false);
 
-    const handleDeleteEtapa = (etapa) => {
-        // Aqui você deve despachar a ação para remover a etapa
-        // Exemplo:
-        // dispatch(removerEtapa(etapa.id)).then(() => handleEtapaAdicionada());
-        message.success("Etapa excluída com sucesso!");
+    const handleDeleteEtapa = async (etapa) => {
+        try {
+            const etapasAtualizadas = obraSelecionada.etapas.filter(e => e.nome !== etapa.nome);
+
+            const obraAtualizada = {
+                ...obraSelecionada,
+                etapas: etapasAtualizadas
+            };
+
+            await dispatch(atualizarObraThunk({ id: obraSelecionada.id, obra: obraAtualizada })).unwrap();
+
+            message.success("Etapa excluída com sucesso!");
+            handleEtapaAdicionada();
+        } catch (error) {
+            message.error("Erro ao excluir etapa.");
+        }
+    };
+
+    const handleDeleteObra = async () => {
+        try {
+            await dispatch(deletarObraThunk(obraSelecionada.id)).unwrap();
+            message.success("Obra excluída com sucesso!");
+            navigate("/");
+        } catch (error) {
+            message.error(error || "Erro ao excluir obra.");
+        }
     };
 
     if (statusObra === "loading") return <Spin size="large" />;
@@ -68,13 +90,29 @@ const ObraDetails = () => {
                     <BotaoVoltar />
                 </Col>
                 <Col>
-                    <Button
-                        type="primary"
-                        icon={<EditOutlined />}
-                        onClick={handleOpenUpdateObraModal}
-                    >
-                        Atualizar Obra
-                    </Button>
+                    <Space>
+                        <Button
+                            type="primary"
+                            icon={<EditOutlined />}
+                            onClick={handleOpenUpdateObraModal}
+                        >
+                            Atualizar Obra
+                        </Button>
+                        <Popconfirm
+                            title="Tem certeza que deseja excluir esta obra?"
+                            onConfirm={handleDeleteObra}
+                            okText="Sim"
+                            cancelText="Não"
+                        >
+                            <Button
+                                danger
+                                type="primary"
+                                icon={<DeleteOutlined />}
+                            >
+                                Excluir Obra
+                            </Button>
+                        </Popconfirm>
+                    </Space>
                 </Col>
             </Row>
             <Title level={2}>{obraSelecionada.nome}</Title>
