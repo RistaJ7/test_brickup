@@ -1,25 +1,33 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Spin, Alert, Row, Col, Table, Typography } from "antd";
-import { formatarDataExibicao } from "../services/FormatDateService";
-import { fetchObraById } from "../store/ObraSlice";
+import { Spin, Alert, Row, Col, Table, Typography, Progress } from "antd";
+import { formatarDataExibicao } from "../../services/FormatDateService";
+import { fetchObraById, fetchQuantEtapasConcluidasObra } from "../../store/ObraSlice";
 import AddEtapaEmObra from "./components/AddEtapaEmObra";
-import BotaoVoltar from "./components/BackButton";
+import BotaoVoltar from "../components/BackButton";
 
 const { Title } = Typography;
 
 const ObraDetails = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
-    const { obraSelecionada, statusObra, errorObra } = useSelector((state) => state.obra);
+    const {
+        obraSelecionada,
+        statusObra,
+        errorObra,
+        quantEtapasConcluidas,
+        statusQuantEtapas
+    } = useSelector((state) => state.obra);
 
     useEffect(() => {
         dispatch(fetchObraById(id));
+        dispatch(fetchQuantEtapasConcluidasObra(id));
     }, [id, dispatch]);
 
     const handleEtapaAdicionada = () => {
         dispatch(fetchObraById(id));
+        dispatch(fetchQuantEtapasConcluidasObra(id));
     };
 
     if (statusObra === "loading") return <Spin size="large" />;
@@ -28,21 +36,31 @@ const ObraDetails = () => {
 
     return (
         <div style={{ padding: "24px" }}>
-            <BotaoVoltar></BotaoVoltar>
+            <BotaoVoltar />
             <Title level={2}>{obraSelecionada.nome}</Title>
 
             <Row gutter={[16, 16]} style={{ marginBottom: "20px", padding: "16px", background: "#f5f5f5", borderRadius: "8px" }}>
-                <Col span={8}>
+                <Col span={6}>
                     <strong>Descrição:</strong>
                     <p>{obraSelecionada.descricao}</p>
                 </Col>
-                <Col span={8}>
+                <Col span={6}>
                     <strong>Data de Início:</strong>
                     <p>{formatarDataExibicao(obraSelecionada.dataInicio)}</p>
                 </Col>
-                <Col span={8}>
+                <Col span={6}>
                     <strong>Data de Término:</strong>
                     <p>{formatarDataExibicao(obraSelecionada.dataPrevisaoFim)}</p>
+                </Col>
+                <Col span={6} style={{ textAlign: "center" }}>
+                    <strong>Progresso das Etapas:</strong>
+                    <div style={{ marginTop: 8 }}>
+                        {statusQuantEtapas === "loading" ? (
+                            <Spin />
+                        ) : (
+                            <Progress type="circle" percent={quantEtapasConcluidas || 0} />
+                        )}
+                    </div>
                 </Col>
             </Row>
 

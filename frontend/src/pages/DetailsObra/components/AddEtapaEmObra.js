@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Modal, Form, Input, DatePicker, Select, Alert } from "antd";
-import { formatarDataEnvioBackend } from "../../services/FormatDateService";
-import { adicionarEtapa } from "../../store/EtapaSlice";
+import { formatarDataEnvioBackend } from "../../../services/FormatDateService";
+import { adicionarEtapa } from "../../../store/EtapaSlice";
 
 const { Option } = Select;
 

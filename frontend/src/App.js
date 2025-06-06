@@ -3,7 +3,7 @@ import GlobalHeader from "./components/Header";
 import GlobalSider from "./components/Sider/Sider";
 import { Route, Routes } from "react-router-dom";
 import ListObra from "./pages/ListObra"
-import DetailsObra from "./pages/DetailsObra"
+import DetailsObra from "./pages/DetailsObra/DetailsObra"
 import FormCreateObra from "./pages/FormCreateObra"
 
 const { Content } = Layout;

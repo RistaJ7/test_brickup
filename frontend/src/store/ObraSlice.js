@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getObras, getEtapasDaObra, getObraById } from "../services/ObraService";
+import { getObras, getEtapasDaObra, getObraById, getQuantEtapasConluidasObra } from "../services/ObraService";
 
 export const fetchObras = createAsyncThunk("obra/fetchObras", async () => {
     const obras = await getObras();
@@ -26,6 +26,18 @@ export const fetchObraById = createAsyncThunk("obra/fetchObraById", async (id, {
     }
 });
 
+export const fetchQuantEtapasConcluidasObra = createAsyncThunk(
+    "obra/fetchQuantEtapasConcluidasObra",
+    async (id, { rejectWithValue }) => {
+        try {
+            const data = await getQuantEtapasConluidasObra(id);
+            return data;
+        } catch (error) {
+            return rejectWithValue("Erro ao buscar quantidade de etapas concluídas.");
+        }
+    }
+);
+
 const obraSlice = createSlice({
     name: "obra",
     initialState: {
@@ -35,12 +47,18 @@ const obraSlice = createSlice({
         obraSelecionada: null,
         statusObra: "idle",
         errorObra: null,
+        quantEtapasConcluidas: null,
+        statusQuantEtapas: "idle",
+        errorQuantEtapas: null,
     },
     reducers: {
         limparObraSelecionada: (state) => {
             state.obraSelecionada = null;
             state.statusObra = "idle";
             state.errorObra = null;
+            state.quantEtapasConcluidas = null;
+            state.statusQuantEtapas = "idle";
+            state.errorQuantEtapas = null;
         },
     },
     extraReducers: (builder) => {
@@ -56,7 +74,6 @@ const obraSlice = createSlice({
                 state.status = "failed";
                 state.error = action.error.message;
             })
-            // 🔹 Atualizamos para incluir as etapas ao buscar uma obra por ID
             .addCase(fetchObraById.pending, (state) => {
                 state.statusObra = "loading";
             })
@@ -67,6 +84,17 @@ const obraSlice = createSlice({
             .addCase(fetchObraById.rejected, (state, action) => {
                 state.statusObra = "failed";
                 state.errorObra = action.payload;
+            })
+            .addCase(fetchQuantEtapasConcluidasObra.pending, (state) => {
+                state.statusQuantEtapas = "loading";
+            })
+            .addCase(fetchQuantEtapasConcluidasObra.fulfilled, (state, action) => {
+                state.statusQuantEtapas = "succeeded";
+                state.quantEtapasConcluidas = action.payload;
+            })
+            .addCase(fetchQuantEtapasConcluidasObra.rejected, (state, action) => {
+                state.statusQuantEtapas = "failed";
+                state.errorQuantEtapas = action.payload;
             });
     },
 });

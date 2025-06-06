@@ -45,3 +45,13 @@ export const getObraById = async (id) => {
         throw error;
     }
 };
+
+export const getQuantEtapasConluidasObra = async (id) => {
+    try {
+        const response = await api.get(`${URI}/obrasEtapasConcluidas/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao buscar obra:", error);
+        throw error;
+    }
+};
