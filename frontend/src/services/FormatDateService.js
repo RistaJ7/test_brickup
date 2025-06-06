@@ -1,5 +1,7 @@
 const formatarDataExibicao = (data) => {
-    return new Intl.DateTimeFormat("pt-BR").format(new Date(data));
+    if (!data) return "";
+    const [ano, mes, dia] = data.split("-");
+    return `${dia}/${mes}/${ano}`;
 };
 
 const formatarDataEnvioBackend = (data) => {

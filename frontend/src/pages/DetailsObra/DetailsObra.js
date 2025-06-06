@@ -10,7 +10,7 @@ import { ReloadOutlined, EditOutlined } from "@ant-design/icons";
 import UpdateEtapaModal from "./components/UpdateEtapaModal";
 import UpdateObraModal from "./components/UpdateObraModal";
 
-const { Title } = Typography;
+const { Title, Paragraph } = Typography;
 
 const ObraDetails = () => {
     const { id } = useParams();
@@ -75,7 +75,15 @@ const ObraDetails = () => {
             <Row gutter={[16, 16]} style={{ marginBottom: "20px", padding: "16px", background: "#f5f5f5", borderRadius: "8px" }}>
                 <Col span={6}>
                     <strong>Descrição:</strong>
-                    <p>{obraSelecionada.descricao}</p>
+                    <Paragraph
+                        ellipsis={{
+                            rows: 2,
+                            expandable: 'collapsible',
+                        }}
+                        style={{ marginBottom: 0 }}
+                    >
+                        {obraSelecionada.descricao}
+                    </Paragraph>
                 </Col>
                 <Col span={6}>
                     <strong>Data de Início:</strong>
@@ -86,7 +94,7 @@ const ObraDetails = () => {
                     <p>{formatarDataExibicao(obraSelecionada.dataPrevisaoFim)}</p>
                 </Col>
                 <Col span={6} style={{ textAlign: "center" }}>
-                    <strong>Progresso das Etapas:</strong>
+                    <strong>Progresso da Obra:</strong>
                     <div style={{ marginTop: 8 }}>
                         {statusQuantEtapas === "loading" ? (
                             <Spin />
@@ -97,22 +105,22 @@ const ObraDetails = () => {
                 </Col>
             </Row>
 
-            <Row justify="end" style={{ marginBottom: "16px" }}>
+            <Row justify="end">
                 <Col>
                     <AddEtapaEmObra obraId={obraSelecionada.id} onEtapaAdicionada={handleEtapaAdicionada} />
                 </Col>
             </Row>
 
+            <Title level={3} style={{ marginTop: 0 }}>Etapas da Obra</Title>
             {obraSelecionada.etapas?.length > 0 ? (
                 <>
-                    <Title level={3}>Etapas da Obra</Title>
                     <Table
                         dataSource={obraSelecionada.etapas}
                         rowKey="nome"
-                        pagination={{ pageSize: 5 }}
+                        pagination={{ pageSize: 4 }}
                         bordered
                         columns={[
-                            { title: "Nome", dataIndex: "nome", key: "nome" , align: "center" },
+                            { title: "Nome", dataIndex: "nome", key: "nome", align: "center" },
                             {
                                 title: "Status", dataIndex: "status", key: "status", render: (status) => (
                                     <span style={{ color: status === "EM_ANDAMENTO" ? "orange" : status === "CONCLUIDA" ? "green" : "gray" }}>
@@ -124,7 +132,7 @@ const ObraDetails = () => {
                             { title: "Data de Início", dataIndex: "dataInicio", key: "dataInicio", render: formatarDataExibicao, align: "center" },
                             { title: "Data de Fim", dataIndex: "dataFim", key: "dataFim", render: formatarDataExibicao, align: "center" },
                             {
-                                title: "Ações",
+                                title: "Atualizar Etapa",
                                 key: "acoes",
                                 align: "center",
                                 render: (_, etapa) => (

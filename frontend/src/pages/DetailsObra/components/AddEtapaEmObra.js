@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Modal, Form, Input, DatePicker, Select, Alert } from "antd";
 import { formatarDataEnvioBackend } from "../../../services/FormatDateService";
 import { adicionarEtapa } from "../../../store/EtapaSlice";
+import { PlusOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
@@ -25,6 +26,8 @@ const AddEtapaEmObra = ({ obraId, onEtapaAdicionada }) => {
 
     const handleCloseFeedback = () => {
         setFeedbackVisible(false);
+        handleCloseModal();
+        onEtapaAdicionada();
     };
 
     const handleSubmit = async (values) => {
@@ -44,17 +47,11 @@ const AddEtapaEmObra = ({ obraId, onEtapaAdicionada }) => {
             console.error("Erro ao adicionar etapa:", error);
             setFeedbackVisible(true);
         }
-
-        setTimeout(() => {
-            handleCloseModal();
-            onEtapaAdicionada();
-        }, 2000);
     };
-
 
     return (
         <>
-            <Button type="primary" size="medium" onClick={handleOpenModal}>
+            <Button type="primary" size="medium" onClick={handleOpenModal} icon={<PlusOutlined />}>
                 Adicionar Etapa
             </Button>
 
@@ -88,7 +85,13 @@ const AddEtapaEmObra = ({ obraId, onEtapaAdicionada }) => {
                 </Form>
             </Modal>
 
-            <Modal title="Status da Etapa" open={feedbackVisible} onCancel={handleCloseFeedback} footer={null}>
+            <Modal
+                title="Status da Etapa"
+                open={feedbackVisible}
+                onCancel={handleCloseFeedback}
+                footer={null}
+                centered
+            >
                 {statusEtapas === "succeeded" ? (
                     <Alert message="Etapa adicionada com sucesso!" type="success" showIcon />
                 ) : statusEtapas === "failed" ? (
