@@ -15,3 +15,17 @@ export const createEtapa = async (etapa) => {
         throw error;
     }
 };
+
+export const atualizarEtapa = async (id, etapa) => {
+    try {
+        const response = await api.put(`${URI}/${id}`, etapa, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao cadastrar obra:", error);
+        throw error;
+    }
+};

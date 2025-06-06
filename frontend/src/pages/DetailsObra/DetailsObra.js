@@ -1,11 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Spin, Alert, Row, Col, Table, Typography, Progress } from "antd";
+import { Spin, Alert, Row, Col, Table, Typography, Progress, Button } from "antd";
 import { formatarDataExibicao } from "../../services/FormatDateService";
 import { fetchObraById, fetchQuantEtapasConcluidasObra } from "../../store/ObraSlice";
 import AddEtapaEmObra from "./components/AddEtapaEmObra";
 import BotaoVoltar from "../components/BackButton";
+import { ReloadOutlined } from "@ant-design/icons";
+import UpdateEtapaModal from "./components/UpdateEtapaModal";
 
 const { Title } = Typography;
 
@@ -20,6 +22,9 @@ const ObraDetails = () => {
         statusQuantEtapas
     } = useSelector((state) => state.obra);
 
+    const [modalUpdateVisible, setModalUpdateVisible] = useState(false);
+    const [etapaSelecionada, setEtapaSelecionada] = useState(null);
+
     useEffect(() => {
         dispatch(fetchObraById(id));
         dispatch(fetchQuantEtapasConcluidasObra(id));
@@ -28,6 +33,16 @@ const ObraDetails = () => {
     const handleEtapaAdicionada = () => {
         dispatch(fetchObraById(id));
         dispatch(fetchQuantEtapasConcluidasObra(id));
+    };
+
+    const handleOpenUpdateModal = (etapa) => {
+        setEtapaSelecionada(etapa);
+        setModalUpdateVisible(true);
+    };
+
+    const handleCloseUpdateModal = () => {
+        setModalUpdateVisible(false);
+        setEtapaSelecionada(null);
     };
 
     if (statusObra === "loading") return <Spin size="large" />;
@@ -79,23 +94,42 @@ const ObraDetails = () => {
                         pagination={{ pageSize: 5 }}
                         bordered
                         columns={[
-                            { title: "Nome", dataIndex: "nome", key: "nome" },
+                            { title: "Nome", dataIndex: "nome", key: "nome" , align: "center" },
                             {
                                 title: "Status", dataIndex: "status", key: "status", render: (status) => (
                                     <span style={{ color: status === "EM_ANDAMENTO" ? "orange" : status === "CONCLUIDA" ? "green" : "gray" }}>
                                         {status.replace("_", " ")}
                                     </span>
-                                )
+                                ), align: "center"
                             },
-                            { title: "Responsável", dataIndex: "responsavel", key: "responsavel" },
-                            { title: "Data de Início", dataIndex: "dataInicio", key: "dataInicio", render: formatarDataExibicao },
-                            { title: "Data de Fim", dataIndex: "dataFim", key: "dataFim", render: formatarDataExibicao },
+                            { title: "Responsável", dataIndex: "responsavel", key: "responsavel", align: "center" },
+                            { title: "Data de Início", dataIndex: "dataInicio", key: "dataInicio", render: formatarDataExibicao, align: "center" },
+                            { title: "Data de Fim", dataIndex: "dataFim", key: "dataFim", render: formatarDataExibicao, align: "center" },
+                            {
+                                title: "Ações",
+                                key: "acoes",
+                                align: "center",
+                                render: (_, etapa) => (
+                                    <Button
+                                        icon={<ReloadOutlined />}
+                                        onClick={() => handleOpenUpdateModal(etapa)}
+                                    >
+                                        Atualizar
+                                    </Button>
+                                ),
+                            },
                         ]}
                     />
                 </>
             ) : (
                 <Alert message="Nenhuma etapa encontrada para esta obra." type="info" showIcon />
             )}
+            <UpdateEtapaModal
+                etapa={etapaSelecionada}
+                visible={modalUpdateVisible}
+                onClose={handleCloseUpdateModal}
+                onUpdated={handleEtapaAdicionada}
+            />
         </div>
     );
 };
