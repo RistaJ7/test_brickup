@@ -4,7 +4,9 @@ Aplicação web para gerenciar as etapas de uma obra.
 🚀 **Como executar o projeto:**
 
 ### Clonar o repositório
-```git clone https://github.com/RudeBoyOne/test_brickup.git```
+```shell
+git clone https://github.com/RudeBoyOne/test_brickup.git
+```
 
 ### Executar uma instância do MySQL
 ##### sugestão docker
