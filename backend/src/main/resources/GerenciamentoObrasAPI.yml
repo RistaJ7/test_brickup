@@ -1,0 +1,423 @@
+openapi: 3.0.1
+info:
+  title: API de Gerenciamento de Obras e Etapas
+  description: API para gerenciamento de obras e suas etapas
+  version: '1.0'
+  contact:
+    name: Construction Phase Manager
+    email: dev@lucasfncode.com.br
+
+servers:
+  - url: http://localhost:8080
+    description: Servidor Local
+
+tags:
+  - name: Obras
+    description: Operações relacionadas a obras
+  - name: Etapas
+    description: Operações relacionadas a etapas de obras
+
+paths:
+  /obras:
+    post:
+      tags:
+        - Obras
+      summary: Criar uma nova obra
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ObraInputDTO'
+      responses:
+        '201':
+          description: Obra criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObraOutputDTO'
+        '400':
+          description: Dados inválidos fornecidos
+
+    get:
+      tags:
+        - Obras
+      summary: Listar todas as obras
+      responses:
+        '200':
+          description: Lista de obras recuperada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ObraOutputDTO'
+
+  /obras/{idObra}:
+    get:
+      tags:
+        - Obras
+      summary: Buscar obra por ID
+      parameters:
+        - name: idObra
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Obra encontrada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObraOutputDTO'
+        '404':
+          description: Obra não encontrada
+
+    put:
+      tags:
+        - Obras
+      summary: Atualizar uma obra
+      parameters:
+        - name: idObra
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ObraInputUpdateDTO'
+      responses:
+        '200':
+          description: Obra atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObraOutputDTO'
+        '404':
+          description: Obra não encontrada
+
+    delete:
+      tags:
+        - Obras
+      summary: Excluir uma obra
+      parameters:
+        - name: idObra
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Obra excluída com sucesso
+        '404':
+          description: Obra não encontrada
+
+  /obras/obrasEtapasConcluidas/{idObra}:
+    get:
+      tags:
+        - Obras
+      summary: Buscar quantidade de etapas concluídas
+      parameters:
+        - name: idObra
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Quantidade de etapas concluídas
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+        '404':
+          description: Obra não encontrada
+
+  /obras/{idObra}/etapas:
+    get:
+      tags:
+        - Obras
+      summary: Listar etapas de uma obra
+      parameters:
+        - name: idObra
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Lista de etapas da obra
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EtapaOutputDTO'
+        '404':
+          description: Obra não encontrada
+
+  /etapas:
+    post:
+      tags:
+        - Etapas
+      summary: Criar uma nova etapa
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EtapaInputDTO'
+      responses:
+        '201':
+          description: Etapa criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EtapaOutputDTO'
+        '400':
+          description: Dados inválidos fornecidos
+
+    get:
+      tags:
+        - Etapas
+      summary: Listar todas as etapas
+      responses:
+        '200':
+          description: Lista de etapas recuperada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EtapaOutputDTO'
+
+  /etapas/{idEtapa}:
+    get:
+      tags:
+        - Etapas
+      summary: Buscar etapa por ID
+      parameters:
+        - name: idEtapa
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Etapa encontrada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EtapaOutputDTO'
+        '404':
+          description: Etapa não encontrada
+
+    put:
+      tags:
+        - Etapas
+      summary: Atualizar uma etapa
+      parameters:
+        - name: idEtapa
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EtapaInputDTO'
+      responses:
+        '200':
+          description: Etapa atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EtapaOutputDTO'
+        '404':
+          description: Etapa não encontrada
+
+    delete:
+      tags:
+        - Etapas
+      summary: Excluir uma etapa
+      parameters:
+        - name: idEtapa
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Etapa excluída com sucesso
+        '404':
+          description: Etapa não encontrada
+
+components:
+  schemas:
+    ObraInputDTO:
+      type: object
+      required:
+        - nome
+        - descricao
+        - dataInicio
+        - dataPrevisaoFim
+      properties:
+        nome:
+          type: string
+          example: "Construção Residencial"
+        descricao:
+          type: string
+          example: "Construção de casa com 3 quartos"
+        dataInicio:
+          type: string
+          format: date
+          example: "2024-03-20"
+        dataPrevisaoFim:
+          type: string
+          format: date
+          example: "2024-12-20"
+
+    ObraInputUpdateDTO:
+      type: object
+      properties:
+        nome:
+          type: string
+          example: "Construção Residencial"
+        descricao:
+          type: string
+          example: "Construção de casa com 3 quartos"
+        dataInicio:
+          type: string
+          format: date
+          example: "2024-03-20"
+        dataPrevisaoFim:
+          type: string
+          format: date
+          example: "2024-12-20"
+        etapas:
+          type: array
+          items:
+            $ref: '#/components/schemas/EtapaInputUpdateObraDTO'
+
+    EtapaInputUpdateObraDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        obra:
+          $ref: '#/components/schemas/ObraInputEtapaDTO'
+        nome:
+          type: string
+          example: "Fundação"
+        status:
+          type: string
+          enum: [ PENDENTE, EM_ANDAMENTO, CONCLUIDA ]
+          example: "PENDENTE"
+        responsavel:
+          type: string
+          example: "João Silva"
+        dataInicio:
+          type: string
+          format: date
+          example: "2024-03-20"
+        dataFim:
+          type: string
+          format: date
+          example: "2024-04-20"
+
+    ObraInputEtapaDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+
+    ObraOutputDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nome:
+          type: string
+        descricao:
+          type: string
+        dataInicio:
+          type: string
+          format: date
+        dataPrevisaoFim:
+          type: string
+          format: date
+
+    EtapaInputDTO:
+      type: object
+      required:
+        - obra
+        - nome
+        - status
+        - responsavel
+        - dataInicio
+        - dataFim
+      properties:
+        obra:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+        nome:
+          type: string
+          example: "Fundação"
+        status:
+          type: string
+          enum: [ PENDENTE, EM_ANDAMENTO, CONCLUIDA ]
+          example: "PENDENTE"
+        responsavel:
+          type: string
+          example: "João Silva"
+        dataInicio:
+          type: string
+          format: date
+          example: "2024-03-20"
+        dataFim:
+          type: string
+          format: date
+          example: "2024-04-20"
+
+    EtapaOutputDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        obra:
+          $ref: '#/components/schemas/ObraOutputDTO'
+        nome:
+          type: string
+        status:
+          type: string
+          enum: [ PENDENTE, EM_ANDAMENTO, CONCLUIDA ]
+        responsavel:
+          type: string
+        dataInicio:
+          type: string
+          format: date
+        dataFim:
+          type: string
+          format: date
