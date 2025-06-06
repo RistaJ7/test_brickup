@@ -6,6 +6,7 @@ import ListObra from "./pages/ListObra"
 import DetailsObra from "./pages/DetailsObra/DetailsObra"
 import FormCreateObra from "./pages/FormCreateObra"
 import "./App.css";
+import Desenvolvedor from "./pages/Desenvolvedor";
 
 const { Content } = Layout;
 
@@ -32,6 +33,7 @@ const App = () => {
                         <Route path="/" element={<ListObra />} />
                         <Route path="/obraDetails/:id" element={<DetailsObra />} />
                         <Route path="/createObra" element={<FormCreateObra />} />
+                        <Route path="/desenvolvedor" element={<Desenvolvedor />} />
                     </Routes>
                 </Content>
             </Layout>
