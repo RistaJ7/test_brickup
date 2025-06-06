@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { Spin, Alert, Row, Col, Table, Typography } from "antd";
 import { formatarDataExibicao } from "../services/FormatDateService";
 import { fetchObraById } from "../store/ObraSlice";
+import AddEtapaEmObra from "./components/AddEtapaEmObra";
+import BotaoVoltar from "./components/BackButton";
 
 const { Title } = Typography;
 
@@ -16,16 +18,19 @@ const ObraDetails = () => {
         dispatch(fetchObraById(id));
     }, [id, dispatch]);
 
+    const handleEtapaAdicionada = () => {
+        dispatch(fetchObraById(id));
+    };
+
     if (statusObra === "loading") return <Spin size="large" />;
     if (statusObra === "failed") return <Alert message={errorObra} type="error" showIcon />;
     if (!obraSelecionada) return <Alert message="Obra não encontrada." type="warning" showIcon />;
 
     return (
         <div style={{ padding: "24px" }}>
-            {/* Título da Obra */}
+            <BotaoVoltar></BotaoVoltar>
             <Title level={2}>{obraSelecionada.nome}</Title>
 
-            {/* Header com três colunas */}
             <Row gutter={[16, 16]} style={{ marginBottom: "20px", padding: "16px", background: "#f5f5f5", borderRadius: "8px" }}>
                 <Col span={8}>
                     <strong>Descrição:</strong>
@@ -41,7 +46,12 @@ const ObraDetails = () => {
                 </Col>
             </Row>
 
-            {/* Tabela de Etapas */}
+            <Row justify="end" style={{ marginBottom: "16px" }}>
+                <Col>
+                    <AddEtapaEmObra obraId={obraSelecionada.id} onEtapaAdicionada={handleEtapaAdicionada} />
+                </Col>
+            </Row>
+
             {obraSelecionada.etapas?.length > 0 ? (
                 <>
                     <Title level={3}>Etapas da Obra</Title>
@@ -73,3 +83,4 @@ const ObraDetails = () => {
 };
 
 export default ObraDetails;
+

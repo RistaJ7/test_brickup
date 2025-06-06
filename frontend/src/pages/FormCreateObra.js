@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { cadastrarObra, fecharModal } from "../store/ObraFormSlice";
 import { CheckCircleOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
-import BotaoVoltar from "../components/BackButton";
+import BotaoVoltar from "./components/BackButton";
 
 const FormObra = () => {
     const [form] = Form.useForm();
