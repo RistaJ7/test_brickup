@@ -49,6 +49,7 @@ public class ObraService {
 
     public Long buscarEtapasConcluidasObra(UUID id) {
         Integer totalEtapas = this.buscarEtapasDeUmaObra(id).size();
+        if (totalEtapas.equals(0)) return totalEtapas.longValue();
         Long etapasConcluidas = this.buscarObraEntityPorId(id).getEtapas().stream()
                 .filter(etapa -> etapa.getStatus()
                         .equals(StatusEtapa.CONCLUIDA)).count();
