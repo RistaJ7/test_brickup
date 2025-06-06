@@ -1,27 +1,34 @@
-import { useSelector, useDispatch } from "react-redux";
-import { Layout, Menu } from "antd";
+import { useSelector } from "react-redux";
+import { Image, Layout, Menu } from "antd";
 import { HomeOutlined, ProfileOutlined, FormOutlined } from "@ant-design/icons";
-import styles from "./Sider.module.css";
 import { Link } from "react-router-dom";
-import { collapseSider } from "../../store/UISlice";
+import logo from "../../assets/images/logo.jpg";
 const { Sider } = Layout;
 
 const GlobalSider = () => {
-    const dispatch = useDispatch();
     const collapsed = useSelector((state) => state.ui.siderCollapsed);
 
     return (
-        <Sider trigger={null} collapsible collapsed={collapsed}>
-            <div className={styles.logo} />
+        <Sider
+            trigger={null}
+            collapsible
+            collapsed={collapsed}
+            style={{ padding: 0, display: "flex", flexDirection: "column", alignItems: "center" }}
+        >
+            <Image
+                src={logo}
+                preview={false}
+                style={{ width: "100%", maxWidth: 120, height: "auto", margin: "16px 0" }}
+            />
             <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
                 <Menu.Item key="1" icon={<HomeOutlined />}>
-                    <Link to="/" onClick={() => !collapsed && dispatch(collapseSider())}>Home</Link>
+                    <Link to="/">Home</Link>
                 </Menu.Item>
                 <Menu.Item key="2" icon={<ProfileOutlined />}>
-                    <Link to="/details" onClick={() => !collapsed && dispatch(collapseSider())}>Details</Link>
+                    <Link to="/details">Details</Link>
                 </Menu.Item>
                 <Menu.Item key="3" icon={<FormOutlined />}>
-                    <Link to="/forms" onClick={() => !collapsed && dispatch(collapseSider())}>Forms</Link>
+                    <Link to="/forms">Forms</Link>
                 </Menu.Item>
             </Menu>
         </Sider>
