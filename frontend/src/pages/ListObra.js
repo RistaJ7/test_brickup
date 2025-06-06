@@ -1,9 +1,11 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchObras } from "../store/ObraSlice";
-import { List, Card, Spin, Alert, Button, Steps } from "antd";
+import { List, Card, Spin, Alert, Button, Steps, Typography } from "antd";
 import { formatarDataExibicao } from "../services/FormatDateService";
 import { Link, useLocation } from "react-router-dom";
+
+const { Paragraph } = Typography;
 
 const ListObra = () => {
     const dispatch = useDispatch();
@@ -11,10 +13,8 @@ const ListObra = () => {
     const location = useLocation();
 
     useEffect(() => {
-        if (status === "idle") {
-            dispatch(fetchObras());
-        }
-    }, [status, dispatch]);
+        dispatch(fetchObras());
+    }, [dispatch]);
 
     return (
         <div style={{ padding: "24px" }}>
@@ -29,31 +29,54 @@ const ListObra = () => {
                     dataSource={obras}
                     renderItem={(obra) => {
                         const etapas = obra.etapas || [];
-                        const currentEtapaIndex = etapas.findIndex(etapa => etapa.status === "em andamento");
+
+                        const etapasOrdenadas = [...etapas].sort((a, b) => {
+                            const statusOrder = {
+                                "CONCLUIDA": 0,
+                                "EM_ANDAMENTO": 1,
+                                "PENDENTE": 2
+                            };
+                            return statusOrder[a.status] - statusOrder[b.status];
+                        });
+
+                        const currentEtapaIndex = etapasOrdenadas.findIndex(etapa => etapa.status === "EM_ANDAMENTO");
 
                         return (
                             <List.Item>
-                                <Link to={`/obraDetails/${obra.id}`}>
-                                    <Card title={obra.nome}>
-                                        <p><strong>Autor:</strong> {obra.nome}</p>
-                                        <p><strong>Descrição:</strong> {obra.descricao}</p>
-                                        <p><strong>Data início:</strong> {formatarDataExibicao(obra.dataInicio)}</p>
-                                        <p><strong>Data previsão fim:</strong> {formatarDataExibicao(obra.dataPrevisaoFim)}</p>
-
-                                        {etapas.length > 0 && (
-                                            <Steps
-                                                style={{ marginTop: 8 }}
-                                                type="inline"
-                                                current={currentEtapaIndex !== -1 ? currentEtapaIndex : 0}
-                                                items={etapas.map(etapa => ({
-                                                    title: etapa.nome,
-                                                    description: etapa.descricao,
-                                                    status: etapa.status === "EM_ANDAMENTO" ? "process" : etapa.status === "CONCLUIDA" ? "finish" : "wait"
-                                                }))}
-                                            />
-                                        )}
-                                    </Card>
-                                </Link>
+                                <Card
+                                    title={obra.nome}
+                                    actions={[
+                                        <Link to={`/obraDetails/${obra.id}`} key="details">
+                                            <Button type="link">Ver detalhes</Button>
+                                        </Link>
+                                    ]}
+                                >
+                                    <p><strong>Autor:</strong> {obra.nome}</p>
+                                    <Paragraph
+                                        ellipsis={{
+                                            rows: 1,
+                                            expandable: 'collapsible',
+                                        }}
+                                        style={{ marginBottom: 8 }}
+                                    >
+                                        <strong>Descrição:</strong> {obra.descricao}
+                                    </Paragraph>
+                                    <p><strong>Data início:</strong> {formatarDataExibicao(obra.dataInicio)}</p>
+                                    <p><strong>Data previsão fim:</strong> {formatarDataExibicao(obra.dataPrevisaoFim)}</p>
+                                    <p><strong>Etapas:</strong> {etapas.length}</p>
+                                    {etapasOrdenadas.length > 0 && (
+                                        <Steps
+                                            style={{ marginTop: 8 }}
+                                            type="inline"
+                                            current={currentEtapaIndex !== -1 ? currentEtapaIndex : 0}
+                                            items={etapasOrdenadas.map(etapa => ({
+                                                title: etapa.nome,
+                                                description: etapa.descricao,
+                                                status: etapa.status === "EM_ANDAMENTO" ? "process" : etapa.status === "CONCLUIDA" ? "finish" : "wait"
+                                            }))}
+                                        />
+                                    )}
+                                </Card>
                             </List.Item>
                         );
                     }}
