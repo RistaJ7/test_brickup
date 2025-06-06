@@ -14,7 +14,7 @@ const App = () => {
     } = theme.useToken();
 
     return (
-        <Layout>
+        <Layout style={{ minHeight: "100vh" }}>
             <GlobalSider />
             <Layout>
                 <GlobalHeader />
