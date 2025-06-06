@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getObras, getEtapasDaObra, getObraById, getQuantEtapasConluidasObra } from "../services/ObraService";
+import { getObras, getEtapasDaObra, getObraById, getQuantEtapasConluidasObra, atualizarObra as atualizarObraService } from "../services/ObraService";
 
 export const fetchObras = createAsyncThunk("obra/fetchObras", async () => {
     const obras = await getObras();
@@ -34,6 +34,18 @@ export const fetchQuantEtapasConcluidasObra = createAsyncThunk(
             return data;
         } catch (error) {
             return rejectWithValue("Erro ao buscar quantidade de etapas concluídas.");
+        }
+    }
+);
+
+export const atualizarObra = createAsyncThunk(
+    "obra/atualizarObra",
+    async ({ id, obra }, { rejectWithValue }) => {
+        try {
+            const data = await atualizarObraService(id, obra);
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || "Erro ao atualizar obra.");
         }
     }
 );
@@ -95,6 +107,20 @@ const obraSlice = createSlice({
             .addCase(fetchQuantEtapasConcluidasObra.rejected, (state, action) => {
                 state.statusQuantEtapas = "failed";
                 state.errorQuantEtapas = action.payload;
+            })
+            .addCase(atualizarObra.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(atualizarObra.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                const index = state.obras.findIndex(obra => obra.id === action.payload.id);
+                if (index !== -1) {
+                    state.obras[index] = action.payload;
+                }
+            })
+            .addCase(atualizarObra.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.payload;
             });
     },
 });

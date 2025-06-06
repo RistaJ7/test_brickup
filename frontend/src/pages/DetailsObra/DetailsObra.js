@@ -6,8 +6,9 @@ import { formatarDataExibicao } from "../../services/FormatDateService";
 import { fetchObraById, fetchQuantEtapasConcluidasObra } from "../../store/ObraSlice";
 import AddEtapaEmObra from "./components/AddEtapaEmObra";
 import BotaoVoltar from "../components/BackButton";
-import { ReloadOutlined } from "@ant-design/icons";
+import { ReloadOutlined, EditOutlined } from "@ant-design/icons";
 import UpdateEtapaModal from "./components/UpdateEtapaModal";
+import UpdateObraModal from "./components/UpdateObraModal";
 
 const { Title } = Typography;
 
@@ -24,6 +25,7 @@ const ObraDetails = () => {
 
     const [modalUpdateVisible, setModalUpdateVisible] = useState(false);
     const [etapaSelecionada, setEtapaSelecionada] = useState(null);
+    const [modalUpdateObraVisible, setModalUpdateObraVisible] = useState(false);
 
     useEffect(() => {
         dispatch(fetchObraById(id));
@@ -45,13 +47,29 @@ const ObraDetails = () => {
         setEtapaSelecionada(null);
     };
 
+    const handleOpenUpdateObraModal = () => setModalUpdateObraVisible(true);
+    const handleCloseUpdateObraModal = () => setModalUpdateObraVisible(false);
+
     if (statusObra === "loading") return <Spin size="large" />;
     if (statusObra === "failed") return <Alert message={errorObra} type="error" showIcon />;
     if (!obraSelecionada) return <Alert message="Obra não encontrada." type="warning" showIcon />;
 
     return (
         <div style={{ padding: "24px" }}>
-            <BotaoVoltar />
+            <Row justify="space-between" align="middle" style={{ marginBottom: 24 }}>
+                <Col>
+                    <BotaoVoltar />
+                </Col>
+                <Col>
+                    <Button
+                        type="primary"
+                        icon={<EditOutlined />}
+                        onClick={handleOpenUpdateObraModal}
+                    >
+                        Atualizar Obra
+                    </Button>
+                </Col>
+            </Row>
             <Title level={2}>{obraSelecionada.nome}</Title>
 
             <Row gutter={[16, 16]} style={{ marginBottom: "20px", padding: "16px", background: "#f5f5f5", borderRadius: "8px" }}>
@@ -128,6 +146,12 @@ const ObraDetails = () => {
                 etapa={etapaSelecionada}
                 visible={modalUpdateVisible}
                 onClose={handleCloseUpdateModal}
+                onUpdated={handleEtapaAdicionada}
+            />
+            <UpdateObraModal
+                obra={obraSelecionada}
+                visible={modalUpdateObraVisible}
+                onClose={handleCloseUpdateObraModal}
                 onUpdated={handleEtapaAdicionada}
             />
         </div>

@@ -55,3 +55,17 @@ export const getQuantEtapasConluidasObra = async (id) => {
         throw error;
     }
 };
+
+export const atualizarObra = async (id, obra) => {
+    try {
+        const response = await api.put(`${URI}/${id}`, obra, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao cadastrar obra:", error);
+        throw error;
+    }
+};

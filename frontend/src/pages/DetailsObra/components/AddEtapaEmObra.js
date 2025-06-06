@@ -66,6 +66,7 @@ const AddEtapaEmObra = ({ obraId, onEtapaAdicionada }) => {
 
                     <Form.Item label="Status" name="status" rules={[{ required: true, message: "Selecione um status" }]}>
                         <Select placeholder="Selecione um status">
+                            <Option value="PENDENTE">Pendente</Option>
                             <Option value="EM_ANDAMENTO">Em Andamento</Option>
                             <Option value="CONCLUIDA">Concluída</Option>
                         </Select>
