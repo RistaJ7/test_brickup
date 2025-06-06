@@ -1,7 +1,9 @@
 package com.br.lucasfncode.construction_phase_manager.domain.service;
 
-import com.br.lucasfncode.construction_phase_manager.application.model.input.ObraInputDTO;
+import com.br.lucasfncode.construction_phase_manager.application.model.input.obra.EtapaInputUpdateObraDTO;
+import com.br.lucasfncode.construction_phase_manager.application.model.input.obra.ObraInputDTO;
 import com.br.lucasfncode.construction_phase_manager.application.model.input.etapa.EtapaInputDTO;
+import com.br.lucasfncode.construction_phase_manager.application.model.input.obra.ObraInputUpdateDTO;
 import com.br.lucasfncode.construction_phase_manager.application.model.output.EtapaOutputDTO;
 import com.br.lucasfncode.construction_phase_manager.application.model.output.ObraOutputDTO;
 import com.br.lucasfncode.construction_phase_manager.domain.entity.Obra;
@@ -12,6 +14,15 @@ import org.springframework.stereotype.Service;
 public class ConversorService {
 
     public Obra obraInputDTOParaObra(ObraInputDTO obraInputDTO) {
+        return new Obra(
+                obraInputDTO.nome(),
+                obraInputDTO.descricao(),
+                obraInputDTO.dataInicio(),
+                obraInputDTO.dataPrevisaoFim()
+        );
+    }
+
+    public Obra obraInputUpdateDTOParaObra(ObraInputUpdateDTO obraInputDTO) {
         return new Obra(
                 obraInputDTO.nome(),
                 obraInputDTO.descricao(),
@@ -31,6 +42,17 @@ public class ConversorService {
     }
 
     public Etapa etapaInputDTOParaEtapa(EtapaInputDTO etapaInputDTO, Obra obra) {
+        return new Etapa(
+                obra,
+                etapaInputDTO.nome(),
+                etapaInputDTO.status(),
+                etapaInputDTO.responsavel(),
+                etapaInputDTO.dataInicio(),
+                etapaInputDTO.dataFim()
+        );
+    }
+
+    public Etapa etapaInputUpdateObraDTOParaEtapa(EtapaInputUpdateObraDTO etapaInputDTO, Obra obra) {
         return new Etapa(
                 obra,
                 etapaInputDTO.nome(),

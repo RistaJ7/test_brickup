@@ -1,4 +1,4 @@
-package com.br.lucasfncode.construction_phase_manager.application.model.input;
+package com.br.lucasfncode.construction_phase_manager.application.model.input.obra;
 
 import java.time.LocalDate;
 

@@ -1,6 +1,7 @@
 package com.br.lucasfncode.construction_phase_manager.application.controller;
 
-import com.br.lucasfncode.construction_phase_manager.application.model.input.ObraInputDTO;
+import com.br.lucasfncode.construction_phase_manager.application.model.input.obra.ObraInputDTO;
+import com.br.lucasfncode.construction_phase_manager.application.model.input.obra.ObraInputUpdateDTO;
 import com.br.lucasfncode.construction_phase_manager.application.model.output.EtapaOutputDTO;
 import com.br.lucasfncode.construction_phase_manager.application.model.output.ObraOutputDTO;
 import com.br.lucasfncode.construction_phase_manager.domain.service.ObraService;
@@ -25,7 +26,7 @@ public class ObraController {
     }
 
     @PutMapping("/{idObra}")
-    public ResponseEntity<ObraOutputDTO> atualizar(@PathVariable UUID idObra, @RequestBody ObraInputDTO obraInputDTO) {
+    public ResponseEntity<ObraOutputDTO> atualizar(@PathVariable UUID idObra, @RequestBody ObraInputUpdateDTO obraInputDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(obraService.atualizarObra(idObra, obraInputDTO));
     }
 

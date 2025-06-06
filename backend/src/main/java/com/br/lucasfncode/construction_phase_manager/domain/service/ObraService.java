@@ -1,9 +1,11 @@
 package com.br.lucasfncode.construction_phase_manager.domain.service;
 
-import com.br.lucasfncode.construction_phase_manager.application.model.input.ObraInputDTO;
+import com.br.lucasfncode.construction_phase_manager.application.model.input.obra.ObraInputDTO;
+import com.br.lucasfncode.construction_phase_manager.application.model.input.obra.ObraInputUpdateDTO;
 import com.br.lucasfncode.construction_phase_manager.application.model.output.EtapaOutputDTO;
 import com.br.lucasfncode.construction_phase_manager.application.model.output.ObraOutputDTO;
 import com.br.lucasfncode.construction_phase_manager.domain.entity.Obra;
+import com.br.lucasfncode.construction_phase_manager.domain.entity.etapa.Etapa;
 import com.br.lucasfncode.construction_phase_manager.domain.entity.etapa.StatusEtapa;
 import com.br.lucasfncode.construction_phase_manager.domain.repository.ObraRepository;
 import lombok.AllArgsConstructor;
@@ -24,9 +26,12 @@ public class ObraService {
         return conversorService.obraParaObraOutputDTO(obraRepository.save(obra));
     }
 
-    public ObraOutputDTO atualizarObra(UUID id, ObraInputDTO obraInputDTO) {
-        Obra obra = conversorService.obraInputDTOParaObra(obraInputDTO);
+    public ObraOutputDTO atualizarObra(UUID id, ObraInputUpdateDTO obraInputDTO) {
+        Obra obra = conversorService.obraInputUpdateDTOParaObra(obraInputDTO);
         obra.setId(id);
+        List<Etapa> etapas = obraInputDTO.etapas().stream().map(etapa ->
+                conversorService.etapaInputUpdateObraDTOParaEtapa(etapa, obra)).toList();
+        obra.setEtapas(etapas);
         return conversorService.obraParaObraOutputDTO(obraRepository.save(obra));
     }
 

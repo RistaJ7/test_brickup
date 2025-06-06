@@ -2,7 +2,6 @@ package com.br.lucasfncode.construction_phase_manager.domain.service;
 
 import com.br.lucasfncode.construction_phase_manager.application.model.input.etapa.EtapaInputDTO;
 import com.br.lucasfncode.construction_phase_manager.application.model.output.EtapaOutputDTO;
-import com.br.lucasfncode.construction_phase_manager.application.model.output.ObraOutputDTO;
 import com.br.lucasfncode.construction_phase_manager.domain.entity.Obra;
 import com.br.lucasfncode.construction_phase_manager.domain.entity.etapa.Etapa;
 import com.br.lucasfncode.construction_phase_manager.domain.repository.EtapaRepository;
