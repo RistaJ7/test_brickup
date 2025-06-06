@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import ListObra from "./pages/ListObra"
 import DetailsObra from "./pages/DetailsObra/DetailsObra"
 import FormCreateObra from "./pages/FormCreateObra"
+import "./App.css";
 
 const { Content } = Layout;
 

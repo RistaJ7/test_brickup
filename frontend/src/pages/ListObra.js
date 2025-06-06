@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchObras } from "../store/ObraSlice";
-import { List, Card, Spin, Alert, Button, Steps, Typography } from "antd";
+import { List, Card, Spin, Alert, Button, Steps, Typography, Row, Col } from "antd";
 import { formatarDataExibicao } from "../services/FormatDateService";
 import { Link, useLocation } from "react-router-dom";
+import { PlusOutlined } from "@ant-design/icons";
 
-const { Paragraph } = Typography;
+const { Paragraph, Title } = Typography;
 
 const ListObra = () => {
     const dispatch = useDispatch();
@@ -18,7 +19,24 @@ const ListObra = () => {
 
     return (
         <div style={{ padding: "24px" }}>
-            <h1>Obras</h1>
+            <Row justify="space-between" align="middle" style={{ marginBottom: 24 }}>
+                <Col>
+                    <Title level={1} style={{ margin: 0 }}>Obras</Title>
+                </Col>
+                <Col>
+                    <Link
+                        to="/createObra"
+                        state={{ from: location.pathname }}>
+                        <Button
+                            type="primary"
+                            size="large"
+                            icon={<PlusOutlined />}
+                        >
+                            Criar Nova Obra
+                        </Button>
+                    </Link>
+                </Col>
+            </Row>
 
             {status === "loading" && <Spin size="large" />}
             {status === "failed" && <Alert message="Erro ao carregar obras" type="error" showIcon />}
@@ -65,16 +83,27 @@ const ListObra = () => {
                                     <p><strong>Data previsão fim:</strong> {formatarDataExibicao(obra.dataPrevisaoFim)}</p>
                                     <p><strong>Etapas:</strong> {etapas.length}</p>
                                     {etapasOrdenadas.length > 0 && (
-                                        <Steps
-                                            style={{ marginTop: 8 }}
-                                            type="inline"
-                                            current={currentEtapaIndex !== -1 ? currentEtapaIndex : 0}
-                                            items={etapasOrdenadas.map(etapa => ({
-                                                title: etapa.nome,
-                                                description: etapa.descricao,
-                                                status: etapa.status === "EM_ANDAMENTO" ? "process" : etapa.status === "CONCLUIDA" ? "finish" : "wait"
-                                            }))}
-                                        />
+                                        <div
+                                            className="custom-scrollbar"
+                                            style={{
+                                                overflowX: "auto",
+                                                maxWidth: "100%",
+                                                paddingBottom: 8
+                                            }}
+                                        >
+                                            <div style={{ minWidth: 350, width: "max-content" }}>
+                                                <Steps
+                                                    style={{ marginTop: 8 }}
+                                                    type="inline"
+                                                    current={currentEtapaIndex !== -1 ? currentEtapaIndex : 0}
+                                                    items={etapasOrdenadas.map(etapa => ({
+                                                        title: etapa.nome,
+                                                        description: etapa.descricao,
+                                                        status: etapa.status === "EM_ANDAMENTO" ? "process" : etapa.status === "CONCLUIDA" ? "finish" : "wait"
+                                                    }))}
+                                                />
+                                            </div>
+                                        </div>
                                     )}
                                 </Card>
                             </List.Item>
@@ -82,16 +111,6 @@ const ListObra = () => {
                     }}
                 />
             )}
-            <Link
-                to="/createObra"
-                state={{ from: location.pathname }}>
-                <Button
-                    type="primary"
-                    size="large"
-                >
-                    Criar Obra
-                </Button>
-            </Link>
         </div>
     );
 };
