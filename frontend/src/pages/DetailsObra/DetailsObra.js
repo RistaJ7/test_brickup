@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Spin, Alert, Row, Col, Table, Typography, Progress, Button } from "antd";
+import { Spin, Alert, Row, Col, Table, Typography, Progress, Button, Popconfirm, message } from "antd";
 import { formatarDataExibicao } from "../../services/FormatDateService";
-import { fetchObraById, fetchQuantEtapasConcluidasObra } from "../../store/ObraSlice";
+import { buscarObraPorIdThunk, buscarQuantEtapasConcluidasObraThunk } from "../../store/ObraSlice";
 import AddEtapaEmObra from "./components/AddEtapaEmObra";
 import BotaoVoltar from "../components/BackButton";
-import { ReloadOutlined, EditOutlined } from "@ant-design/icons";
-import UpdateEtapaModal from "./components/UpdateEtapaModal";
-import UpdateObraModal from "./components/UpdateObraModal";
+import { ReloadOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import UpdateEtapaModal from "./components/UpdateEtapa";
+import UpdateObraModal from "./components/UpdateObra";
 
 const { Title, Paragraph } = Typography;
 
@@ -28,13 +28,13 @@ const ObraDetails = () => {
     const [modalUpdateObraVisible, setModalUpdateObraVisible] = useState(false);
 
     useEffect(() => {
-        dispatch(fetchObraById(id));
-        dispatch(fetchQuantEtapasConcluidasObra(id));
+        dispatch(buscarObraPorIdThunk(id));
+        dispatch(buscarQuantEtapasConcluidasObraThunk(id));
     }, [id, dispatch]);
 
     const handleEtapaAdicionada = () => {
-        dispatch(fetchObraById(id));
-        dispatch(fetchQuantEtapasConcluidasObra(id));
+        dispatch(buscarObraPorIdThunk(id));
+        dispatch(buscarQuantEtapasConcluidasObraThunk(id));
     };
 
     const handleOpenUpdateModal = (etapa) => {
@@ -49,6 +49,13 @@ const ObraDetails = () => {
 
     const handleOpenUpdateObraModal = () => setModalUpdateObraVisible(true);
     const handleCloseUpdateObraModal = () => setModalUpdateObraVisible(false);
+
+    const handleDeleteEtapa = (etapa) => {
+        // Aqui você deve despachar a ação para remover a etapa
+        // Exemplo:
+        // dispatch(removerEtapa(etapa.id)).then(() => handleEtapaAdicionada());
+        message.success("Etapa excluída com sucesso!");
+    };
 
     if (statusObra === "loading") return <Spin size="large" />;
     if (statusObra === "failed") return <Alert message={errorObra} type="error" showIcon />;
@@ -142,6 +149,23 @@ const ObraDetails = () => {
                                     >
                                         Atualizar
                                     </Button>
+                                ),
+                            },
+                            {
+                                title: "Excluir Etapa",
+                                key: "excluir",
+                                align: "center",
+                                render: (_, etapa) => (
+                                    <Popconfirm
+                                        title="Tem certeza que deseja excluir esta etapa?"
+                                        onConfirm={() => handleDeleteEtapa(etapa)}
+                                        okText="Sim"
+                                        cancelText="Não"
+                                    >
+                                        <Button danger icon={<DeleteOutlined />} >
+                                            Excluir
+                                        </Button>
+                                    </Popconfirm>
                                 ),
                             },
                         ]}

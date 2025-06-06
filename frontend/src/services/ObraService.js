@@ -2,7 +2,7 @@ import api from "./Api";
 
 const URI = "/obras";
 
-export const getObras = async () => {
+export const buscarTodasObras = async () => {
     try {
         const response = await api.get(`${URI}`);
         return response.data;
@@ -12,7 +12,7 @@ export const getObras = async () => {
     }
 };
 
-export const getEtapasDaObra = async (idObra) => {
+export const buscarEtapasDaObra = async (idObra) => {
     try {
         const response = await api.get(`${URI}/${idObra}/etapas`);
         return response.data;
@@ -22,7 +22,7 @@ export const getEtapasDaObra = async (idObra) => {
     }
 };
 
-export const createObra = async (obra) => {
+export const criarObra = async (obra) => {
     try {
         const response = await api.post(`${URI}`, obra, {
             headers: {
@@ -36,7 +36,7 @@ export const createObra = async (obra) => {
     }
 };
 
-export const getObraById = async (id) => {
+export const buscarObraPorId = async (id) => {
     try {
         const response = await api.get(`${URI}/${id}`);
         return response.data;
@@ -46,7 +46,7 @@ export const getObraById = async (id) => {
     }
 };
 
-export const getQuantEtapasConluidasObra = async (id) => {
+export const buscarQuantEtapasConluidasObra = async (id) => {
     try {
         const response = await api.get(`${URI}/obrasEtapasConcluidas/${id}`);
         return response.data;

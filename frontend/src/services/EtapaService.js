@@ -2,7 +2,7 @@ import api from "./Api";
 
 const URI = "/etapas";
 
-export const createEtapa = async (etapa) => {
+export const criarEtapa = async (etapa) => {
     try {
         const response = await api.post(`${URI}`, etapa, {
             headers: {

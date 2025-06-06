@@ -2,10 +2,10 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal, Form, Input, DatePicker, Button, Alert } from "antd";
 import { formatarDataEnvioBackend } from "../../../services/FormatDateService";
-import { atualizarObra } from "../../../store/ObraSlice";
+import { atualizarObraThunk } from "../../../store/ObraSlice";
 import dayjs from "dayjs";
 
-const UpdateObraModal = ({ obra, visible, onClose, onUpdated }) => {
+const UpdateObra = ({ obra, visible, onClose, onUpdated }) => {
     const dispatch = useDispatch();
     const { statusObra, errorObra } = useSelector((state) => state.obra);
     const [form] = Form.useForm();
@@ -32,7 +32,7 @@ const UpdateObraModal = ({ obra, visible, onClose, onUpdated }) => {
         };
 
         try {
-            await dispatch(atualizarObra({ id: obra.id, obra: obraAtualizada })).unwrap();
+            await dispatch(atualizarObraThunk({ id: obra.id, obra: obraAtualizada })).unwrap();
             onUpdated();
             onClose();
         } catch (error) {
@@ -46,7 +46,7 @@ const UpdateObraModal = ({ obra, visible, onClose, onUpdated }) => {
             open={visible}
             onCancel={onClose}
             footer={null}
-            destroyOnClose
+            unmountOnClose
         >
             <Form form={form} onFinish={handleSubmit} layout="vertical">
                 <Form.Item label="Nome" name="nome" rules={[{ required: true, message: "Informe o nome da obra" }]}>
@@ -72,4 +72,4 @@ const UpdateObraModal = ({ obra, visible, onClose, onUpdated }) => {
     );
 };
 
-export default UpdateObraModal;
+export default UpdateObra;

@@ -2,12 +2,12 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal, Form, Input, DatePicker, Select, Button, Alert } from "antd";
 import { formatarDataEnvioBackend } from "../../../services/FormatDateService";
-import { atualizarEtapa } from "../../../store/EtapaSlice";
+import { atualizarEtapaThunk } from "../../../store/EtapaSlice";
 import dayjs from "dayjs";
 
 const { Option } = Select;
 
-const UpdateEtapaModal = ({ etapa, visible, onClose, onUpdated }) => {
+const UpdateEtapa = ({ etapa, visible, onClose, onUpdated }) => {
     const dispatch = useDispatch();
     const { statusEtapas, errorEtapas } = useSelector((state) => state.etapa);
     const [form] = Form.useForm();
@@ -35,7 +35,7 @@ const UpdateEtapaModal = ({ etapa, visible, onClose, onUpdated }) => {
         };
 
         try {
-            await dispatch(atualizarEtapa({ id: etapa.id, etapa: etapaAtualizada })).unwrap();
+            await dispatch(atualizarEtapaThunk({ id: etapa.id, etapa: etapaAtualizada })).unwrap();
             onUpdated();
             onClose();
         } catch (error) {
@@ -82,4 +82,4 @@ const UpdateEtapaModal = ({ etapa, visible, onClose, onUpdated }) => {
     );
 };
 
-export default UpdateEtapaModal;
+export default UpdateEtapa;

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Modal, Form, Input, DatePicker, Select, Alert } from "antd";
 import { formatarDataEnvioBackend } from "../../../services/FormatDateService";
-import { adicionarEtapa } from "../../../store/EtapaSlice";
+import { adicionarEtapaThunk } from "../../../store/EtapaSlice";
 import { PlusOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
@@ -41,7 +41,7 @@ const AddEtapaEmObra = ({ obraId, onEtapaAdicionada }) => {
         };
 
         try {
-            await dispatch(adicionarEtapa(etapa)).unwrap();
+            await dispatch(adicionarEtapaThunk(etapa)).unwrap();
             setFeedbackVisible(true);
         } catch (error) {
             console.error("Erro ao adicionar etapa:", error);

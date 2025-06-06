@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { createObra } from "../services/ObraService";
+import { criarObra } from "../services/ObraService";
 
-export const cadastrarObra = createAsyncThunk("obraForm/cadastrarObra", async (obra, { rejectWithValue }) => {
+export const cadastrarObraThunk = createAsyncThunk("obraForm/cadastrarObra", async (obra, { rejectWithValue }) => {
     try {
-        await createObra(JSON.stringify(obra));
+        await criarObra(JSON.stringify(obra));
         return "Obra cadastrada com sucesso!";
     } catch (error) {
         return rejectWithValue("Erro ao cadastrar obra. Verifique os dados e tente novamente.");
@@ -24,12 +24,12 @@ const obraFormSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(cadastrarObra.fulfilled, (state, action) => {
+            .addCase(cadastrarObraThunk.fulfilled, (state, action) => {
                 state.modalMessage = action.payload;
                 state.isError = false;
                 state.modalVisible = true;
             })
-            .addCase(cadastrarObra.rejected, (state, action) => {
+            .addCase(cadastrarObraThunk.rejected, (state, action) => {
                 state.modalMessage = action.payload;
                 state.isError = true;
                 state.modalVisible = true;

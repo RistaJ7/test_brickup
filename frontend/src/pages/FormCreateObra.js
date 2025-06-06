@@ -2,7 +2,7 @@ import { Form, Input, Button, DatePicker, Modal, Typography, Row, Col } from "an
 import { formatarDataEnvioBackend } from "../services/FormatDateService";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { cadastrarObra, fecharModal } from "../store/ObraFormSlice";
+import { cadastrarObraThunk, fecharModal } from "../store/ObraFormSlice";
 import { CheckCircleOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import BotaoVoltar from "./components/BackButton";
 
@@ -23,7 +23,7 @@ const FormObra = () => {
             dataPrevisaoFim: formatarDataEnvioBackend(values.dataPrevisaoFim),
         };
 
-        dispatch(cadastrarObra(obra));
+        dispatch(cadastrarObraThunk(obra));
     };
 
     const handleCloseModal = () => {

@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getObras, getEtapasDaObra, getObraById, getQuantEtapasConluidasObra, atualizarObra as atualizarObraService } from "../services/ObraService";
+import { atualizarObra, buscarEtapasDaObra, buscarObraPorId, buscarQuantEtapasConluidasObra, buscarTodasObras } from "../services/ObraService";
 
-export const fetchObras = createAsyncThunk("obra/fetchObras", async () => {
-    const obras = await getObras();
-    const etapasPromises = obras.map(obra => getEtapasDaObra(obra.id));
+export const buscarTodasObrasThunk = createAsyncThunk("obra/buscarTodasObrasThunk", async () => {
+    const obras = await buscarTodasObras();
+    const etapasPromises = obras.map(obra => buscarEtapasDaObra(obra.id));
     const etapas = await Promise.all(etapasPromises);
 
     const obrasComEtapas = obras.map((obra, index) => ({
@@ -14,11 +14,11 @@ export const fetchObras = createAsyncThunk("obra/fetchObras", async () => {
     return obrasComEtapas;
 });
 
-export const fetchObraById = createAsyncThunk("obra/fetchObraById", async (id, { rejectWithValue }) => {
+export const buscarObraPorIdThunk = createAsyncThunk("obra/buscarObraPorIdThunk", async (id, { rejectWithValue }) => {
     try {
-        const obra = await getObraById(id);
+        const obra = await buscarObraPorId(id);
 
-        const etapas = await getEtapasDaObra(id);
+        const etapas = await buscarEtapasDaObra(id);
 
         return { ...obra, etapas };
     } catch (error) {
@@ -26,11 +26,11 @@ export const fetchObraById = createAsyncThunk("obra/fetchObraById", async (id, {
     }
 });
 
-export const fetchQuantEtapasConcluidasObra = createAsyncThunk(
-    "obra/fetchQuantEtapasConcluidasObra",
+export const buscarQuantEtapasConcluidasObraThunk = createAsyncThunk(
+    "obra/buscarQuantEtapasConcluidasObra",
     async (id, { rejectWithValue }) => {
         try {
-            const data = await getQuantEtapasConluidasObra(id);
+            const data = await buscarQuantEtapasConluidasObra(id);
             return data;
         } catch (error) {
             return rejectWithValue("Erro ao buscar quantidade de etapas concluídas.");
@@ -38,11 +38,11 @@ export const fetchQuantEtapasConcluidasObra = createAsyncThunk(
     }
 );
 
-export const atualizarObra = createAsyncThunk(
-    "obra/atualizarObra",
+export const atualizarObraThunk = createAsyncThunk(
+    "obra/atualizarObraThunk",
     async ({ id, obra }, { rejectWithValue }) => {
         try {
-            const data = await atualizarObraService(id, obra);
+            const data = await atualizarObra(id, obra);
             return data;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || "Erro ao atualizar obra.");
@@ -75,50 +75,50 @@ const obraSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchObras.pending, (state) => {
+            .addCase(buscarTodasObrasThunk.pending, (state) => {
                 state.status = "loading";
             })
-            .addCase(fetchObras.fulfilled, (state, action) => {
+            .addCase(buscarTodasObrasThunk.fulfilled, (state, action) => {
                 state.status = "succeeded";
                 state.obras = action.payload;
             })
-            .addCase(fetchObras.rejected, (state, action) => {
+            .addCase(buscarTodasObrasThunk.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.error.message;
             })
-            .addCase(fetchObraById.pending, (state) => {
+            .addCase(buscarObraPorIdThunk.pending, (state) => {
                 state.statusObra = "loading";
             })
-            .addCase(fetchObraById.fulfilled, (state, action) => {
+            .addCase(buscarObraPorIdThunk.fulfilled, (state, action) => {
                 state.statusObra = "succeeded";
                 state.obraSelecionada = action.payload;
             })
-            .addCase(fetchObraById.rejected, (state, action) => {
+            .addCase(buscarObraPorIdThunk.rejected, (state, action) => {
                 state.statusObra = "failed";
                 state.errorObra = action.payload;
             })
-            .addCase(fetchQuantEtapasConcluidasObra.pending, (state) => {
+            .addCase(buscarQuantEtapasConcluidasObraThunk.pending, (state) => {
                 state.statusQuantEtapas = "loading";
             })
-            .addCase(fetchQuantEtapasConcluidasObra.fulfilled, (state, action) => {
+            .addCase(buscarQuantEtapasConcluidasObraThunk.fulfilled, (state, action) => {
                 state.statusQuantEtapas = "succeeded";
                 state.quantEtapasConcluidas = action.payload;
             })
-            .addCase(fetchQuantEtapasConcluidasObra.rejected, (state, action) => {
+            .addCase(buscarQuantEtapasConcluidasObraThunk.rejected, (state, action) => {
                 state.statusQuantEtapas = "failed";
                 state.errorQuantEtapas = action.payload;
             })
-            .addCase(atualizarObra.pending, (state) => {
+            .addCase(atualizarObraThunk.pending, (state) => {
                 state.status = "loading";
             })
-            .addCase(atualizarObra.fulfilled, (state, action) => {
+            .addCase(atualizarObraThunk.fulfilled, (state, action) => {
                 state.status = "succeeded";
                 const index = state.obras.findIndex(obra => obra.id === action.payload.id);
                 if (index !== -1) {
                     state.obras[index] = action.payload;
                 }
             })
-            .addCase(atualizarObra.rejected, (state, action) => {
+            .addCase(atualizarObraThunk.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.payload;
             });

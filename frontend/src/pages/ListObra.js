@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchObras } from "../store/ObraSlice";
+import { buscarTodasObrasThunk } from "../store/ObraSlice";
 import { List, Card, Spin, Alert, Button, Steps, Typography, Row, Col } from "antd";
 import { formatarDataExibicao } from "../services/FormatDateService";
 import { Link, useLocation } from "react-router-dom";
@@ -14,7 +14,7 @@ const ListObra = () => {
     const location = useLocation();
 
     useEffect(() => {
-        dispatch(fetchObras());
+        dispatch(buscarTodasObrasThunk());
     }, [dispatch]);
 
     return (
