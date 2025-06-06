@@ -43,13 +43,6 @@ public class EtapaService {
                 .etapaParaEtapaOutpuDTO(etapa, etapa.getObra())).toList();
     }
 
-    public List<EtapaOutputDTO> buscarEtapasDeUmaObra(UUID idObra) {
-        Obra obra = obraService.buscarObraEntityPorId(idObra);
-        List<Etapa> listEtapa = etapaRepository.findByObra(obra);
-        return listEtapa.stream().map(etapa -> this.conversorService
-                .etapaParaEtapaOutpuDTO(etapa, obra)).toList();
-    }
-
     public void excluirEtapa(UUID idEtapa) {
         etapaRepository.deleteById(idEtapa);
     }

@@ -1,8 +1,10 @@
 package com.br.lucasfncode.construction_phase_manager.domain.service;
 
 import com.br.lucasfncode.construction_phase_manager.application.model.input.ObraInputDTO;
+import com.br.lucasfncode.construction_phase_manager.application.model.output.EtapaOutputDTO;
 import com.br.lucasfncode.construction_phase_manager.application.model.output.ObraOutputDTO;
 import com.br.lucasfncode.construction_phase_manager.domain.entity.Obra;
+import com.br.lucasfncode.construction_phase_manager.domain.entity.etapa.Etapa;
 import com.br.lucasfncode.construction_phase_manager.domain.entity.etapa.StatusEtapa;
 import com.br.lucasfncode.construction_phase_manager.domain.repository.ObraRepository;
 import com.sun.jdi.LongValue;
@@ -40,6 +42,11 @@ public class ObraService {
 
     public List<ObraOutputDTO> buscarTodasObras() {
         return obraRepository.findAll().stream().map(conversorService::obraParaObraOutputDTO).toList();
+    }
+
+    public List<EtapaOutputDTO> buscarEtapasDeUmaObra(UUID id) {
+        return this.buscarObraEntityPorId(id).getEtapas().stream().map(etapa -> this.conversorService
+                .etapaParaEtapaOutpuDTO(etapa, this.buscarObraEntityPorId(id))).toList();
     }
 
     public Long buscarEtapasConcluidasObra(UUID id) {

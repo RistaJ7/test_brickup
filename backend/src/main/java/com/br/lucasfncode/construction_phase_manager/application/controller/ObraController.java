@@ -19,7 +19,6 @@ import java.util.UUID;
 public class ObraController {
 
     private final ObraService obraService;
-    private final EtapaService etapaService;
 
     @PostMapping
     public ResponseEntity<ObraOutputDTO> criar(@RequestBody ObraInputDTO obraInputDTO) {
@@ -48,7 +47,7 @@ public class ObraController {
 
     @GetMapping("/{idObra}/etapas")
     public ResponseEntity<List<EtapaOutputDTO>> listarEtapasPorObra(@PathVariable UUID idObra) {
-        return ResponseEntity.ok(etapaService.buscarEtapasDeUmaObra(idObra));
+        return ResponseEntity.ok(obraService.buscarEtapasDeUmaObra(idObra));
     }
 
     @DeleteMapping("/{idObra}")
