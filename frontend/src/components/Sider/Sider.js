@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import { Image, Layout, Menu } from "antd";
 import { HomeOutlined, ProfileOutlined, FormOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -6,13 +5,11 @@ import logo from "../../assets/images/logo.jpg";
 const { Sider } = Layout;
 
 const GlobalSider = () => {
-    const collapsed = useSelector((state) => state.ui.siderCollapsed);
 
     return (
         <Sider
             trigger={null}
             collapsible
-            collapsed={collapsed}
             style={{ padding: 0, display: "flex", flexDirection: "column", alignItems: "center" }}
         >
             <Image
