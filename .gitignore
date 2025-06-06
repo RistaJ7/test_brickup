@@ -10,6 +10,7 @@ backend/.idea
 backend/*.iws
 backend/*.iml
 backend/*.ipr
+.idea
 
 ### Rules frontend ###
 frontend/node_modules
