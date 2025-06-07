@@ -11,7 +11,7 @@ git clone https://github.com/RudeBoyOne/test_brickup.git
 ### Executar uma instância do MySQL
 ##### sugestão docker
 ```shell
-docker run --name construction-mysql \                                            
+docker run --name construction-mysql \
     -e MYSQL_ROOT_PASSWORD=root \
     -e MYSQL_DATABASE=construction_phase_manager \
     -e MYSQL_USER=construction_phase_manager \
