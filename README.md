@@ -26,28 +26,22 @@ docker run --name construction-mysql \
 ##### Necessário ter o Java instalado na máquina versão 21 ou superior
 ##### Se estiver no linux
 ```shell
-cd backend \
-./mvnw spring-boot:run 
+cd backend && ./mvnw spring-boot:run 
 ```
 ##### Se estiver no windows
 ```shell
-cd backend ^
-mvnw.cmd spring-boot:run
+cd backend && mvnw.cmd spring-boot:run
 ```
 
 ### Executar o frontend _(em outra aba de seu terminal)_
 ##### Necessário ter o node instalado na máquina versão 20.16.0 ou superior
 ##### Se estiver no linux
 ```shell
-cd frontend \
-npm install \
-npm start 
+cd frontend && npm install && npm start 
 ```
 ##### Se estiver no windows
 ```shell
-cd frontend ^
-npm install ^
-npm start
+cd frontend && npm install && npm start
 ```
 #### Acessar os recursos
 
